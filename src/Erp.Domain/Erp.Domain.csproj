@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Erp.Domain</AssemblyName>
+    <RootNamespace>Erp.Domain</RootNamespace>
+  </PropertyGroup>
+</Project>
