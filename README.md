@@ -50,6 +50,19 @@ scripts\run_migrations.bat
 scripts\run_app.bat
 ```
 
+
+## Execução rápida (1 clique no Windows)
+```bat
+scripts\abrir_erp.vbs
+```
+- Abre o ERP sem manter janela de CMD aberta.
+- Internamente chama o inicializador (`scripts\iniciar_erp.bat`).
+- Na primeira execução, o inicializador cria `.venv`, instala dependências e aplica migrations.
+
+## Documentação complementar
+- Requisitos funcionais e não funcionais: `docs/REQUISITOS_ERP_DESKTOP_OFFLINE.md`
+- Guia de execução e atalho de desktop: `docs/COMO_EXECUTAR.md`
+
 ## Comandos manuais equivalentes
 ```powershell
 python -m venv .venv
