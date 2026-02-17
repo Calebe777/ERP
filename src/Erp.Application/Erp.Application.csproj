@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>Erp.Application</AssemblyName>
-    <RootNamespace>Erp.Application</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="../Erp.Domain/Erp.Domain.csproj" />
-  </ItemGroup>
-</Project>
