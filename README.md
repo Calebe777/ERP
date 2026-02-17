@@ -1,42 +1,65 @@
-# ERP Desktop Offline (.NET 8 + WPF + EF Core + SQLite)
+# ERP Desktop Offline em Python (PySide6 + SQLite + SQLAlchemy + Alembic)
 
-ERP desktop offline com arquitetura em camadas:
-- **UI (WPF/MVVM)**
-- **Application**
-- **Domain**
-- **Infrastructure**
+Projeto ERP desktop offline com:
+- **UI desktop:** PySide6 (Qt)
+- **Banco local:** SQLite (`data/erp.db`)
+- **ORM:** SQLAlchemy 2.x
+- **Migrations:** Alembic
 
-## Recursos implementados
-- Autenticação local (usuários e papel básico Admin/Operator).
-- Seed automático de usuário admin padrão (`admin` / `admin123`).
-- CRUD de Produtos:
-  - Código
-  - Descrição
-  - Preço
-  - Estoque
-  - Ativo/Inativo
-- Busca por código/descrição.
-- Paginação simples.
-- Validações básicas.
-- 100% offline usando SQLite local.
+## Módulos implementados
+1. **Login local**
+   - Usuário padrão criado automaticamente: `admin` / `admin123`
+2. **CRUD de Produtos**
+   - Campos: código, descrição, preço, estoque, ativo/inativo
+   - Busca por código/descrição
+   - Validações de campos obrigatórios e valores numéricos
 
-## Estrutura
-- `src/Erp.Domain`: entidades e enums.
-- `src/Erp.Application`: contratos e regras de negócio.
-- `src/Erp.Infrastructure`: EF Core, SQLite, repositórios, migrations.
-- `src/Erp.UI`: WPF + MVVM.
-
-## Scripts
-- `scripts/restore.sh`: restaura dependências.
-- `scripts/create-db.sh`: cria/atualiza banco aplicando migrations.
-- `scripts/migrate.sh`: aplica migrations via `dotnet ef`.
-- `scripts/run.sh`: executa aplicação WPF.
-
-## Comandos diretos
-```bash
-dotnet restore ERP.sln
-dotnet ef database update --project src/Erp.Infrastructure --startup-project src/Erp.UI
-dotnet run --project src/Erp.UI
+## Estrutura de pastas
+```text
+src/
+  app/
+    ui/
+    data/
+    domain/
+    services/
+alembic/
+  versions/
+scripts/
 ```
 
-> Requisito: SDK .NET 8 instalado na máquina.
+## Pré-requisitos (Windows)
+- Python **3.11+** instalado
+- PowerShell ou Prompt de Comando
+
+## Como rodar no Windows (PowerShell)
+```powershell
+# 1) Criar ambiente virtual e instalar dependências
+.\scripts\setup_venv.ps1
+
+# 2) Aplicar migrations
+.\scripts\run_migrations.ps1
+
+# 3) Executar aplicação
+.\scripts\run_app.ps1
+```
+
+## Como rodar no Windows (CMD)
+```bat
+scripts\setup_venv.bat
+scripts\run_migrations.bat
+scripts\run_app.bat
+```
+
+## Comandos manuais equivalentes
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -e .
+alembic upgrade head
+python -m app.main
+```
+
+## Observações
+- O banco é local/offline e fica no arquivo `data/erp.db`.
+- As migrations ficam em `alembic/versions`.

@@ -1,0 +1,16 @@
+[project]
+name = "erp-desktop-offline"
+version = "0.1.0"
+description = "ERP desktop offline with PySide6 + SQLAlchemy + SQLite"
+requires-python = ">=3.11"
+dependencies = [
+  "PySide6>=6.7.0",
+  "SQLAlchemy>=2.0.0",
+  "alembic>=1.13.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
