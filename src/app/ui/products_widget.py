@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QCheckBox,
     QFormLayout,
+    QFrame,
     QGroupBox,
     QHBoxLayout,
     QLabel,
@@ -18,18 +19,20 @@ from app.services.product_service import ProductInput, ProductService, ProductVa
 
 
 class ProductsWidget(QWidget):
-    def __init__(self) -> None:
+    def __init__(self, on_data_changed=None) -> None:
         super().__init__()
+        self.on_data_changed = on_data_changed
         self.current_product_id: int | None = None
         self._build_ui()
         self.refresh_table()
 
     def _build_ui(self) -> None:
-        title = QLabel("Cadastro de Produtos")
-        title.setStyleSheet("font-size: 18px; font-weight: bold;")
+        title = QLabel("Produtos")
+        title.setStyleSheet("font-size: 22px; font-weight: 700;")
 
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText("Buscar por código ou descrição")
+
         search_btn = QPushButton("Buscar")
         search_btn.clicked.connect(self.refresh_table)
 
@@ -51,14 +54,18 @@ class ProductsWidget(QWidget):
         form.addRow("Estoque", self.stock_input)
         form.addRow("Status", self.active_input)
 
-        form_box = QGroupBox("Dados do Produto")
+        form_box = QGroupBox("Cadastro")
         form_box.setLayout(form)
 
         save_btn = QPushButton("Salvar")
+        save_btn.setStyleSheet("background-color: #2563eb; color: white; font-weight: 700;")
         save_btn.clicked.connect(self.save_product)
+
         new_btn = QPushButton("Novo")
         new_btn.clicked.connect(self.clear_form)
+
         delete_btn = QPushButton("Excluir")
+        delete_btn.setStyleSheet("background-color: #b91c1c; color: white;")
         delete_btn.clicked.connect(self.delete_product)
 
         action_layout = QHBoxLayout()
@@ -72,13 +79,20 @@ class ProductsWidget(QWidget):
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
+        self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.itemSelectionChanged.connect(self.load_selected_product)
+
+        card = QFrame()
+        card.setStyleSheet("QFrame { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }")
+        card_layout = QVBoxLayout()
+        card_layout.addLayout(search_layout)
+        card_layout.addWidget(form_box)
+        card_layout.addLayout(action_layout)
+        card.setLayout(card_layout)
 
         layout = QVBoxLayout()
         layout.addWidget(title)
-        layout.addLayout(search_layout)
-        layout.addWidget(form_box)
-        layout.addLayout(action_layout)
+        layout.addWidget(card)
         layout.addWidget(self.table)
         self.setLayout(layout)
 
@@ -113,6 +127,8 @@ class ProductsWidget(QWidget):
 
         self.clear_form()
         self.refresh_table()
+        if self.on_data_changed:
+            self.on_data_changed()
 
     def refresh_table(self) -> None:
         products = ProductService.list_products(self.search_input.text())
@@ -123,8 +139,15 @@ class ProductsWidget(QWidget):
             code_item.setData(Qt.ItemDataRole.UserRole, product.id)
             self.table.setItem(row, 0, code_item)
             self.table.setItem(row, 1, QTableWidgetItem(product.description))
-            self.table.setItem(row, 2, QTableWidgetItem(f"{product.price:.2f}"))
-            self.table.setItem(row, 3, QTableWidgetItem(str(product.stock)))
+
+            price_item = QTableWidgetItem(f"{product.price:.2f}")
+            price_item.setTextAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+            self.table.setItem(row, 2, price_item)
+
+            stock_item = QTableWidgetItem(str(product.stock))
+            stock_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.table.setItem(row, 3, stock_item)
+
             self.table.setItem(row, 4, QTableWidgetItem("Ativo" if product.is_active else "Inativo"))
 
         self.table.resizeColumnsToContents()
@@ -169,3 +192,5 @@ class ProductsWidget(QWidget):
 
         self.clear_form()
         self.refresh_table()
+        if self.on_data_changed:
+            self.on_data_changed()

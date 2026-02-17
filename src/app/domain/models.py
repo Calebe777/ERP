@@ -25,3 +25,19 @@ class Product(Base):
     stock: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class Invoice(Base):
+    __tablename__ = "invoices"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    invoice_key: Mapped[str] = mapped_column(String(44), unique=True, nullable=False, index=True)
+    number: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    series: Mapped[str] = mapped_column(String(10), nullable=False, default="1")
+    issued_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    emitter_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    emitter_cnpj: Mapped[str] = mapped_column(String(18), nullable=False)
+    total_value: Mapped[float] = mapped_column(Float, nullable=False)
+    item_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    source_xml_path: Mapped[str] = mapped_column(String(1024), nullable=False)
+    imported_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
