@@ -50,6 +50,18 @@ scripts\run_migrations.bat
 scripts\run_app.bat
 ```
 
+
+## Execução rápida (1 clique no Windows)
+```bat
+scripts\iniciar_erp.bat
+```
+- Na primeira execução, o script cria `.venv`, instala dependências e aplica migrations.
+- Nas próximas execuções, ele só atualiza o banco e abre o ERP.
+
+## Documentação complementar
+- Requisitos funcionais e não funcionais: `docs/REQUISITOS_ERP_DESKTOP_OFFLINE.md`
+- Guia de execução e atalho de desktop: `docs/COMO_EXECUTAR.md`
+
 ## Comandos manuais equivalentes
 ```powershell
 python -m venv .venv
